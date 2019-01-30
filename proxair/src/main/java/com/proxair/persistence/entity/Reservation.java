@@ -24,6 +24,14 @@ public class Reservation {
 	@Column (name="montantTotalTTC", nullable=false)
 	private float montantTotalTTC;
 	
+	@Column (name="etatReservationClient", nullable=false)
+	private String etatReservationClient;
+	
+	@Column (name="etatPaiement", nullable=false)
+	private boolean etatPaiement;
+	
+	
+	
 	@ManyToOne
 	@JoinColumn(name="id_client", referencedColumnName="id")
 	private Client client;
