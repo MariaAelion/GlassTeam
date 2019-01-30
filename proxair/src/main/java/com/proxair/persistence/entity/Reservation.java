@@ -24,10 +24,22 @@ public class Reservation {
 	@Column (name="montantTotalTTC", nullable=false)
 	private float montantTotalTTC;
 	
+	@Column (name="etatReservation", length = 25, nullable=false)
+	private String etatReservationClient;
+	
 	@ManyToOne
 	@JoinColumn(name="id_client", referencedColumnName="id")
 	private Client client;
 
+	public String getEtatReservationClient() {
+		return etatReservationClient;
+	}
+
+	public void setEtatReservationClient(String etatReservationClient) {
+		this.etatReservationClient = etatReservationClient;
+	}
+
+	
 	public long getId() {
 		return id;
 	}

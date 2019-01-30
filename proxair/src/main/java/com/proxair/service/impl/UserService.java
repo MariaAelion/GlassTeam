@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.proxair.dto.DtoTrajet;
 import com.proxair.persistence.entity.Trajet;
+import com.proxair.persistence.repository.ReservationRepository;
 import com.proxair.persistence.repository.TrajetRepository;
 import com.proxair.service.IUserService;
 
@@ -19,6 +20,7 @@ import com.proxair.service.IUserService;
 public class UserService implements IUserService {
 	
 	@Autowired TrajetRepository trajetRepository;
+	@Autowired ReservationRepository reservationRepository;
 	
 	public List<DtoTrajet> findRides(Date date) {
 		List<Trajet> trajets = trajetRepository.findRidesByDate(date);
@@ -27,4 +29,11 @@ public class UserService implements IUserService {
 				.map(trajet -> new DtoTrajet(trajet))
 				.collect(Collectors.toList());
 		}
+
+	@Override
+	public void cancelResa(long id) {
+		reservationRepository.cancelReservation(id);	
+	}
+
+
 }
