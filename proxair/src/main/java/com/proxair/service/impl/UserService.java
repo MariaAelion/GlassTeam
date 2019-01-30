@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.proxair.dto.DtoTrajet;
 import com.proxair.persistence.entity.Trajet;
-import com.proxair.persistence.repository.JourRepository;
 import com.proxair.persistence.repository.TrajetRepository;
 import com.proxair.service.IUserService;
 
@@ -19,7 +18,6 @@ import com.proxair.service.IUserService;
 @Transactional
 public class UserService implements IUserService {
 	
-	@Autowired JourRepository jourRepository;
 	@Autowired TrajetRepository trajetRepository;
 	
 	public List<DtoTrajet> findRides(Date date) {

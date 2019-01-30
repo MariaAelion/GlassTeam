@@ -1,5 +1,6 @@
 package com.proxair.persistence.entity;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
@@ -9,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -21,6 +21,9 @@ import javax.persistence.Table;
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		@Column(name = "id", unique = true, nullable = false)
 		private long id;
+		
+		@Column(name = "date", nullable = false)
+		private Date date;
 
 		@Column(name = "heureDepart", nullable = false)
 		private Time heureDepart;
@@ -33,18 +36,10 @@ import javax.persistence.Table;
 		
 		@Column(name = "etat_trajet", nullable = false)
 		private String etatTrajet;
-
-		@ManyToOne
-		@JoinColumn(name="id_jour", referencedColumnName = "id")
-		private Jour jour;
 		
 		@OneToMany
 		@JoinColumn(name="id_reservations", referencedColumnName ="id")
 		private List<Reservation> reservations;
-		
-		@ManyToOne
-		@JoinColumn(name="id_vehicule", referencedColumnName="id")
-		private Vehicule vehicule;
 
 		public long getId() {
 			return id;
@@ -52,6 +47,14 @@ import javax.persistence.Table;
 
 		public void setId(long id) {
 			this.id = id;
+		}
+
+		public Date getDate() {
+			return date;
+		}
+
+		public void setDate(Date date) {
+			this.date = date;
 		}
 
 		public Time getHeureDepart() {
@@ -78,20 +81,12 @@ import javax.persistence.Table;
 			this.nbPlacesDispo = nbPlacesDispo;
 		}
 
-		public String getEtatDeplacement() {
+		public String getEtatTrajet() {
 			return etatTrajet;
 		}
 
-		public void setEtatDeplacement(String etatDeplacement) {
-			this.etatTrajet = etatDeplacement;
-		}
-
-		public Jour getJour() {
-			return jour;
-		}
-
-		public void setJour(Jour jour) {
-			this.jour = jour;
+		public void setEtatTrajet(String etatTrajet) {
+			this.etatTrajet = etatTrajet;
 		}
 
 		public List<Reservation> getReservations() {
@@ -100,13 +95,5 @@ import javax.persistence.Table;
 
 		public void setReservations(List<Reservation> reservations) {
 			this.reservations = reservations;
-		}
-
-		public Vehicule getVehicule() {
-			return vehicule;
-		}
-
-		public void setVehicule(Vehicule vehicule) {
-			this.vehicule = vehicule;
 		}
 }

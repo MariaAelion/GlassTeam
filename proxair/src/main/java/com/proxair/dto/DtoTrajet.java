@@ -9,7 +9,7 @@ public class DtoTrajet {
 	private Time heureDepart;
 	private int nbPlacesTotal;
 	private int nbPlacesDispo;
-	private String etatDeplacement;
+	private String etatTrajet;
 	
 	public DtoTrajet() {
 	}
@@ -18,7 +18,7 @@ public class DtoTrajet {
 		this.setHeureDepart(trajet.getHeureDepart());
 		this.setNbPlacesTotal(trajet.getNbPlacesTotal());
 		this.setNbPlacesDispo(trajet.getNbPlacesDispo());
-		this.setEtatDeplacement(trajet.getEtatDeplacement());
+		this.setEtatTrajet(trajet.getEtatTrajet());
 	}
 
 	public Time getHeureDepart() {
@@ -45,11 +45,12 @@ public class DtoTrajet {
 		this.nbPlacesDispo = nbPlacesDispo;
 	}
 
-	public String getEtatDeplacement() {
-		return etatDeplacement;
+	public String getEtatTrajet() {
+		return etatTrajet;
 	}
 
-	public void setEtatDeplacement(String etatDeplacement) {
-		this.etatDeplacement = etatDeplacement;
+	public void setEtatTrajet(String etatTrajet) {
+		this.etatTrajet = etatTrajet;
 	}
+
 }
