@@ -27,4 +27,15 @@ public class UserService implements IUserService {
 				.map(trajet -> new DtoTrajet(trajet))
 				.collect(Collectors.toList());
 		}
+	
+	@Override
+	public void cancelTrajet(long id) {
+		trajetRepository.cancelTrajet(id);	
+}
+
+	@Override
+	public void cancelResa(long id) {
+		trajetRepository.cancelReservation(id);	
+		
+	}
 }
