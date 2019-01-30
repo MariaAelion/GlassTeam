@@ -41,7 +41,7 @@ import javax.persistence.Table;
 		private String etatReservation;
 		
 		@OneToMany
-		@JoinColumn(name="id_reservations", referencedColumnName ="id")
+		@JoinColumn(name="id_trajets", referencedColumnName ="id")
 		private List<Reservation> reservations;
 
 		public long getId() {
