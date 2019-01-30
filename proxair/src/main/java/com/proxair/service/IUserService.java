@@ -10,5 +10,5 @@ public interface IUserService {
 
 	void cancelTrajet(long id);
 	
-	void cancelResa(long id);
+
 }

@@ -28,17 +28,12 @@ public List<DtoTrajet> findRides(@RequestParam("date") @DateTimeFormat(pattern="
 	return userService.findRides(date);
 }
 
-@PutMapping(value = "/reservation/annule/{id}")
-@ResponseBody
-public void cancelResa (@PathVariable long id) {
-	userService.cancelResa(id);
-	
-	
-}
 
+// change statut de trajet pour le mettre en annulé et affiche "trajet annuléé dans body!
 @PutMapping(value = "/trajet/annule/{id}")
 @ResponseBody
-public void cancelTrajet (@PathVariable long id) {
+public String cancelTrajet (@PathVariable long id) {
 	userService.cancelTrajet(id);
+	return "Trajet annulé";
 }
 }

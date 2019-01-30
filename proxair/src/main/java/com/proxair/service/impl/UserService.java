@@ -28,14 +28,12 @@ public class UserService implements IUserService {
 				.collect(Collectors.toList());
 		}
 	
+	//methode pour change statut de trajet en annule dans le repo
 	@Override
 	public void cancelTrajet(long id) {
 		trajetRepository.cancelTrajet(id);	
 }
 
-	@Override
-	public void cancelResa(long id) {
-		trajetRepository.cancelReservation(id);	
+
 		
 	}
-}

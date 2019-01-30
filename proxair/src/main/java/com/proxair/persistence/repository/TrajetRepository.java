@@ -19,7 +19,5 @@ public interface TrajetRepository extends JpaRepository <Trajet, Long>{
 void cancelTrajet(long id);
 	
 	
-	@Modifying(clearAutomatically = true)
-	@Query (value = "UPDATE t_reservation SET etatReservation = 'Annulé' WHERE id = ?1", nativeQuery = true)
-void cancelReservation(long id);
+
 }
