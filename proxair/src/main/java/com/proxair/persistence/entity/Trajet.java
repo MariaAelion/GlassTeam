@@ -37,6 +37,9 @@ import javax.persistence.Table;
 		@Column(name = "etat_trajet", nullable = false)
 		private String etatTrajet;
 		
+		@Column(name = "etat_reservation", nullable = false)
+		private String etatReservation;
+		
 		@OneToMany
 		@JoinColumn(name="id_reservations", referencedColumnName ="id")
 		private List<Reservation> reservations;
@@ -87,6 +90,14 @@ import javax.persistence.Table;
 
 		public void setEtatTrajet(String etatTrajet) {
 			this.etatTrajet = etatTrajet;
+		}
+
+		public String getEtatReservation() {
+			return etatReservation;
+		}
+
+		public void setEtatReservation(String etatReservation) {
+			this.etatReservation = etatReservation;
 		}
 
 		public List<Reservation> getReservations() {

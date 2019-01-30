@@ -22,10 +22,7 @@ public class Reservation {
 	private int nbPlacesReservees;
 	
 	@Column (name="montantTotalTTC", nullable=false)
-	private float montantTotalHT;
-	
-	@Column (name="etatReservation", nullable=false)
-	private String etatReservation;
+	private float montantTotalTTC;
 	
 	@ManyToOne
 	@JoinColumn(name="id_client", referencedColumnName="id")
@@ -47,20 +44,12 @@ public class Reservation {
 		this.nbPlacesReservees = nbPlacesReservees;
 	}
 
-	public float getMontantTotalHT() {
-		return montantTotalHT;
+	public float getMontantTotalTTC() {
+		return montantTotalTTC;
 	}
 
-	public void setMontantTotalTTC(float montantTotalHT) {
-		this.montantTotalHT = montantTotalHT;
-	}
-
-	public String getEtatReservation() {
-		return etatReservation;
-	}
-
-	public void setEtatReservation(String etatReservation) {
-		this.etatReservation = etatReservation;
+	public void setMontantTotalTTC(float montantTotalTTC) {
+		this.montantTotalTTC = montantTotalTTC;
 	}
 
 	public Client getClient() {
@@ -69,5 +58,5 @@ public class Reservation {
 
 	public void setClient(Client client) {
 		this.client = client;
-	}	
+	}
 }

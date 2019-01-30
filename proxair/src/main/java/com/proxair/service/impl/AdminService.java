@@ -14,6 +14,7 @@ import com.proxair.service.IAdminService;
 public class AdminService implements IAdminService {
 	
 	@Autowired TrajetRepository trajetRepository;
+	
 	public Trajet addTrajet(Trajet trajet) {
 		return trajetRepository.save(trajet);
 	}
