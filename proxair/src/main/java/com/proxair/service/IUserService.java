@@ -8,7 +8,7 @@ import com.proxair.dto.DtoTrajet;
 public interface IUserService {
 	List<DtoTrajet> findRides(Date date);
 
-	void cancelTrajet(long id);
+	void valideTrajet(long id);
 	
 
 }

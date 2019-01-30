@@ -15,8 +15,8 @@ public interface TrajetRepository extends JpaRepository <Trajet, Long>{
 	List<Trajet> findRidesByDate(Date date);
 	
 	@Modifying(clearAutomatically = true)
-	@Query (value = "UPDATE t_trajet SET etat_trajet = 'Annulé' WHERE id = ?1", nativeQuery = true)
-void cancelTrajet(long id);
+	@Query (value = "UPDATE t_trajet SET etat_trajet = 'Validé' WHERE id = ?1", nativeQuery = true)
+void valideTrajet(long id);
 	
 	
 

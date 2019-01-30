@@ -29,11 +29,14 @@ public List<DtoTrajet> findRides(@RequestParam("date") @DateTimeFormat(pattern="
 }
 
 
-// change statut de trajet pour le mettre en annulé et affiche "trajet annuléé dans body!
-@PutMapping(value = "/trajet/annule/{id}")
+// change statut de trajet pour le mettre en validé et affiche "trajet validé dans body!
+@PutMapping(value = "/trajet/valide/{id}")
 @ResponseBody
-public String cancelTrajet (@PathVariable long id) {
-	userService.cancelTrajet(id);
-	return "Trajet annulé";
+public String valideTrajet (@PathVariable long id) {
+	userService.valideTrajet(id);
+	return "Trajet validé";
 }
+
+
+
 }

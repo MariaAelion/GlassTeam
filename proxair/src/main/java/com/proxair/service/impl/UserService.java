@@ -28,10 +28,10 @@ public class UserService implements IUserService {
 				.collect(Collectors.toList());
 		}
 	
-	//methode pour change statut de trajet en annule dans le repo
+	//methode pour change statut de trajet en valide dans le repo
 	@Override
-	public void cancelTrajet(long id) {
-		trajetRepository.cancelTrajet(id);	
+	public void valideTrajet(long id) {
+		trajetRepository.valideTrajet(id);
 }
 
 
