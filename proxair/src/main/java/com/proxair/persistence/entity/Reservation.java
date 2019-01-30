@@ -82,12 +82,10 @@ public class Reservation {
 		this.etatReservationClient = etatReservationClient;
 	}
 
-
-
+	
 	public boolean isEtatPaiement() {
 		return etatPaiement;
 	}
-
 
 
 	public void setEtatPaiement(boolean etatPaiement) {

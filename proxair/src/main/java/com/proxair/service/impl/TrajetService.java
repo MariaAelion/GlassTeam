@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.proxair.exception.NotFoundException;
 import com.proxair.persistence.entity.Reservation;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.persistence.repository.TrajetRepository;
@@ -26,13 +27,15 @@ public class TrajetService implements ITrajetService {
 		
 		if (trajet.isPresent()) {
 			for (Reservation r : listReservations) {
-				if (r.etatPaiement = true && r.etatReservationClient != "Annulé") {
+				if (r.isEtatPaiement() == true && r.getEtatReservationClient() != "Annulé") {
 					nbTotalPlacesReservees += r.getNbPlacesReservees();
 				}
 		}
 		trajet.get().setNbPlacesDispo(trajet.get().getNbPlacesTotal()-nbTotalPlacesReservees);
 	}
-		// TODO exception
+		else {
+			throw new NotFoundException ("Mise à jour des places disponibles sur trajet inexistant !");
+		}
 	}
 	
 	public void updateEtatReservation(long idTrajet) {
@@ -40,8 +43,8 @@ public class TrajetService implements ITrajetService {
 		if (trajet.isPresent() && trajet.get().getNbPlacesDispo() == 0) {
 				trajet.get().setEtatReservation("Complet");
 			}
+		else {
+			throw new NotFoundException ("Mise à jour de l'état de réservation sur trajet inexistant !");
 		}
 	}
-
-	
 }
