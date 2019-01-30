@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 	@Entity
@@ -40,8 +39,7 @@ import javax.persistence.Table;
 		@Column(name = "etat_reservation", nullable = false)
 		private String etatReservation;
 		
-		@OneToMany
-		@JoinColumn(name="id_trajet", referencedColumnName ="id")
+		@JoinColumn(name="id_trajets", referencedColumnName ="id")
 		private List<Reservation> reservations;
 
 		public long getId() {
