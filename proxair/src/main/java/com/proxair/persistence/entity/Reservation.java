@@ -30,8 +30,6 @@ public class Reservation {
 	@Column (name="etatPaiement", nullable=false)
 	private boolean etatPaiement;
 	
-	
-	
 	@ManyToOne
 	@JoinColumn(name="id_client", referencedColumnName="id")
 	private Client client;
