@@ -10,6 +10,6 @@ import com.proxair.persistence.entity.Trajet;
 
 public interface TrajetRepository extends JpaRepository <Trajet, Long>{
 
-	@Query(value= "SELECT * FROM t_trajet WHERE id_jour = ?1", nativeQuery = true)
+	@Query(value= "SELECT * FROM t_trajet WHERE date = ?1 AND etat_reservation <> indisponible", nativeQuery = true)
 	List<Trajet> findRidesByDate(Date date);
 }

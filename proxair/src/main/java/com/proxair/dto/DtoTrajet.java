@@ -10,6 +10,7 @@ public class DtoTrajet {
 	private int nbPlacesTotal;
 	private int nbPlacesDispo;
 	private String etatTrajet;
+	private String etatReservation;
 	
 	public DtoTrajet() {
 	}
@@ -19,6 +20,7 @@ public class DtoTrajet {
 		this.setNbPlacesTotal(trajet.getNbPlacesTotal());
 		this.setNbPlacesDispo(trajet.getNbPlacesDispo());
 		this.setEtatTrajet(trajet.getEtatTrajet());
+		this.setEtatReservation(trajet.getEtatReservation());
 	}
 
 	public Time getHeureDepart() {
@@ -51,6 +53,14 @@ public class DtoTrajet {
 
 	public void setEtatTrajet(String etatTrajet) {
 		this.etatTrajet = etatTrajet;
+	}
+
+	public String getEtatReservation() {
+		return etatReservation;
+	}
+
+	public void setEtatReservation(String etatReservation) {
+		this.etatReservation = etatReservation;
 	}
 
 }
