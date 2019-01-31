@@ -15,13 +15,13 @@ public interface TrajetRepository extends JpaRepository <Trajet, Long>{
 	@Query(value= "SELECT * FROM t_trajet WHERE date = ?1", nativeQuery = true)
 	List<Trajet> findRidesByDate(Date date);
 	
-<<<<<<< HEAD
+
 	@Modifying(clearAutomatically = true)
 	@Query (value = "UPDATE t_trajet SET etat_trajet = 'Validé' WHERE id = ?1", nativeQuery = true)
 void valideTrajet(long id);
 	
 	
-=======
+
 	@Query(value= "SELECT * FROM t_trajet WHERE id = ?1", nativeQuery = true)
 	Optional<Trajet> findRide(int id);
 	
@@ -30,6 +30,6 @@ void valideTrajet(long id);
 	
 	@Query(value= "SELECT * FROM t_trajet WHERE date = ?1 AND heureDepart BETWEEN ?2 AND ?3", nativeQuery = true)
 	List<Trajet> findRidesBetween(Date date, Time time1, Time time2);
->>>>>>> refs/remotes/origin/master
+
 
 }

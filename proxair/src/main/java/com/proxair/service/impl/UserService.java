@@ -32,23 +32,18 @@ public class UserService implements IUserService {
 				.collect(Collectors.toList());
 		}
 	
-<<<<<<< HEAD
+
 	//methode pour change statut de trajet en valide dans le repo
 	@Override
 	public void valideTrajet(long id) {
 		trajetRepository.valideTrajet(id);
 }
 
-
 		
-	}
-=======
-	
 	
 	public void Registerreservation() {}
 	
-	
-	
+		
 	
 	public boolean CheckifReservationIsPossible(Date date, Time time, int nbPlaceAReserver) {
 		
@@ -74,7 +69,8 @@ public class UserService implements IUserService {
 		} else {
 			throw new NotFoundException(" Le trajet " + idTrajet + " n'a pas été trouvé !");
 		}
-	}
 	
-}
->>>>>>> refs/remotes/origin/master
+	
+	}}
+
+
