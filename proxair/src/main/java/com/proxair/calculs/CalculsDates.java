@@ -1,11 +1,12 @@
 package com.proxair.calculs;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class CalculsDates {
 	
-	public static LocalDate paques(int year) {
+	public static LocalDate ispaques(int year) {
 		if (year < 1583) {
 			throw new IllegalStateException();
 		}
@@ -28,7 +29,7 @@ public class CalculsDates {
 	}
 	
 	
-	public static boolean ferie(LocalDate date) {
+	public static boolean isferie(LocalDate date) {
 		final int day = date.getDayOfMonth();
 		switch (date.getMonth()) {
 		case JANUARY:
@@ -78,7 +79,7 @@ public class CalculsDates {
  
 		if (date.getMonthValue() < 7) {
 			// Avant juillet on doit aussi vérifier les fêtes liées à Paques
-			LocalDate paques = paques(date.getYear());
+			LocalDate paques = ispaques(date.getYear());
 			int days = (int) ChronoUnit.DAYS.between(paques, date);
 			switch (days) {
 			case -47: // mardi gras : 47 jours avant Pâques
@@ -93,13 +94,11 @@ public class CalculsDates {
 		return false;
 	}
 	
-	public static boolean weekEnd(LocalDate date) {
-		
-		switch (date.getDayOfWeek() ) {
-		case SATURDAY: return true;
-		case SUNDAY: return true;
-		default: return false;
+	public static boolean isweekEnd(LocalDate date) {
+		if (date.getDayOfWeek().equals(DayOfWeek.SATURDAY) || date.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
+			return true;
 		}
+		else return false;
 
 	}
 

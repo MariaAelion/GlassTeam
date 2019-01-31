@@ -2,6 +2,7 @@ package com.proxair.service.impl;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.List;
@@ -13,8 +14,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.proxair.calculs.CalculsDates;
 import com.proxair.dto.DtoCreationPrixRef;
 import com.proxair.dto.DtoCreationTrajet;
+import com.proxair.dto.DtoGenerate;
 import com.proxair.dto.DtoTournee;
 import com.proxair.dto.DtoTrajet;
 import com.proxair.exception.NotFoundException;
@@ -133,7 +136,7 @@ public class AdminService implements IAdminService {
 		    }
 		    else return false;
 	}
-	
+	 
 	
 	//donne la date dans 15 jours
 	public Date getDate15() {
@@ -148,8 +151,55 @@ public class AdminService implements IAdminService {
 		return date;
 	}
 
+	/////////// Generation des Trajets ////////////
+	
+	public String GenerateTripFromNow(DtoGenerate dtoGenerate) {
+		List<DtoTournee> dtoTournees = listTrip();
+		if (!dtoTournees.isEmpty()) {
+			System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + dtoGenerate.getNombreDeJours());
+			if(dtoGenerate.getNombreDeJours() >0) {
+				Date date = new Date(System.currentTimeMillis());
+				if(dtoGenerate.getDate().after(date)) {
+					int i = 0;
+					DtoCreationTrajet dtotrajet = new DtoCreationTrajet();
+					dtotrajet.setNbPlacesTotal(dtoGenerate.getNombreDePlaces());
+					LocalDate localDate = dtoGenerate.getDate().toLocalDate();
 
+					for (i = 0; i < dtoGenerate.getNombreDeJours(); i++) {
+						
+						if (!CalculsDates.isferie(localDate)&&!CalculsDates.isweekEnd(localDate)) {
+							date = Date.valueOf(localDate);
+							dtotrajet.setDate(date);
+							//
+							for (DtoTournee dtoto : dtoTournees) 
+							{
+								dtotrajet.setHeureDepart(dtoto.getHeureTournee());
+								createtravel(dtotrajet);
+							}
+						}
+						localDate = localDate.plusDays(1);
+					}
+				}
+				else throw new NotFoundException(" Vous devez generer une date ulterieure a la date actuelle");	
+			}
+			else throw new NotFoundException(" Le nombre de jour doit être superieur à 0");			
+		}
+		else throw new NotFoundException(" Vous ne pouvez pas generer de trajets avec un emploi du temps vide");
 
+		return "Tournee generee ";
+		
+	}
+	
+	/////////////// Tournees //////////////
+
+	public List<DtoTournee> listTrip() {
+		List<Tournee> tournees = tourneeRepository.findAllOrdered();
+		
+		return tournees.stream()
+				.map(t -> new DtoTournee(t))
+				.collect(Collectors.toList());
+		
+	}
 
 	@Override
 	public String addTrip(DtoTournee dtoTournee) {

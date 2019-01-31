@@ -1,7 +1,11 @@
 package com.proxair.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.proxair.dto.DtoCreationPrixRef;
 import com.proxair.dto.DtoCreationTrajet;
+import com.proxair.dto.DtoGenerate;
 import com.proxair.dto.DtoTournee;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.service.IAdminService;
@@ -21,15 +26,8 @@ public class AdminController {
 
 	@Autowired IAdminService adminService;
 	
-	@PostMapping(value="/trajets")
-	@ResponseBody
-	@ResponseStatus(code=HttpStatus.CREATED)
-	public Trajet addTrajet(@RequestBody Trajet trajet) {
-		return  adminService.addTrajet(trajet);
-	}
 	
-	
-	@PostMapping(value="/createtravel")
+	@PostMapping(value="/Trajets")
 	@ResponseBody
 	@ResponseStatus(code=HttpStatus.CREATED)
 	public DtoCreationTrajet  addTrajet2(@RequestBody DtoCreationTrajet  dtotrajet) {
@@ -38,20 +36,27 @@ public class AdminController {
 	}
 	
 	
-	@PostMapping(value="/addTrip")
+	@GetMapping(value="/Tournee")
+	@ResponseBody
+	public List<DtoTournee> listTrip(){
+		return adminService.listTrip();
+	}
+	
+	@PostMapping(value="/Tournee")
 	@ResponseBody
 	@ResponseStatus(code=HttpStatus.CREATED)
 	public String  addTrip(@RequestBody DtoTournee  dtoTournee) {
-		
 		return  adminService.addTrip(dtoTournee);
 	}
 	
-	
-	
-	
+	@PatchMapping(value="/Tournee")
+	@ResponseBody
+	public String GenerateTripFromNow(@RequestBody DtoGenerate dtoGenerate) {
+		return adminService.GenerateTripFromNow(dtoGenerate);
+	}
 	
 
-	@PostMapping(value="/createPrixRef")
+	@PostMapping(value="/Prix")
 	@ResponseBody
 	@ResponseStatus(code=HttpStatus.CREATED)
 	public boolean  addPrixRef(@RequestBody DtoCreationPrixRef  dtoCreationPrixRef) {

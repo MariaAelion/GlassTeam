@@ -10,6 +10,14 @@ public class DtoCreationTrajet {
 	private Time heureDepart;
 	private int nbPlacesTotal;
 	
+	public DtoCreationTrajet() {}
+	
+	public DtoCreationTrajet(Date date, Time heureDepart, int nbPlacesTotal) {
+		this.setDate(date);
+		this.setHeureDepart(heureDepart);
+		this.setNbPlacesTotal(nbPlacesTotal);
+	}
+	
 	public Date getDate() {
 		return date;
 	}
