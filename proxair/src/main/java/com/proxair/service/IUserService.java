@@ -9,5 +9,7 @@ public interface IUserService {
 	List<DtoTrajet> findRides(Date date);
 
 	void cancelResa(long id);
+
+	int availabilitySeat(long id);
 	
 }

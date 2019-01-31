@@ -35,5 +35,10 @@ public class UserService implements IUserService {
 		reservationRepository.cancelReservation(id);	
 	}
 
-
+	@Override
+	public int availabilitySeat(long idTrajet) {
+		return trajetRepository.findById(idTrajet).get().getNbPlacesDispo();
+		
+	}
 }
+	
