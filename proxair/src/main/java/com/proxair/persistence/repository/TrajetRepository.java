@@ -14,7 +14,6 @@ public interface TrajetRepository extends JpaRepository <Trajet, Long>{
 	@Query(value= "SELECT * FROM t_trajet WHERE date = ?1", nativeQuery = true)
 	List<Trajet> findRidesByDate(Date date);
 	
-}
 	@Query(value= "SELECT * FROM t_trajet WHERE id = ?1", nativeQuery = true)
 	Optional<Trajet> findRide(int id);
 	
