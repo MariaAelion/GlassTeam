@@ -44,8 +44,5 @@ public class PrixGeneration {
 
 	public void setTvaDeReference(Double tvaDeReference) {
 		this.tvaDeReference = tvaDeReference;
-	}
-
-
-	
+	}	
 }
