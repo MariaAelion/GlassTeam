@@ -2,6 +2,7 @@ package com.proxair.service;
 
 import java.sql.Date;
 
+import com.proxair.dto.DtoCreationPrixRef;
 import com.proxair.dto.DtoCreationTrajet;
 import com.proxair.persistence.entity.Trajet;
 
@@ -12,4 +13,6 @@ public interface IAdminService {
 	DtoCreationTrajet createtravel(DtoCreationTrajet dtotrajet);
 	
 	public boolean checkDate15(Date date);
+
+	boolean createPriceRef(DtoCreationPrixRef dtoCreationPrixRef);
 }
