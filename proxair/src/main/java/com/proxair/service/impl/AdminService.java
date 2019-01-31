@@ -70,5 +70,4 @@ public class AdminService implements IAdminService {
 		    }
 		    else return false;
 	}
-	
 }
