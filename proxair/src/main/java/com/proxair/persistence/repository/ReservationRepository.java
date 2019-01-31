@@ -13,8 +13,5 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
     void cancelReservation(long id);
 	
 	 @Query (value = "SELECT id_trajets FROM t_reservation WHERE id = ?1", nativeQuery = true)
-	 Long findIdTrajetByIdReservation(long idReservation);
-	 
-	 
+	 Long findIdTrajetByIdReservation(long idReservation); 
 }
-
