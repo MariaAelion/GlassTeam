@@ -14,5 +14,7 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
 	
 	 @Query (value = "SELECT id_trajets FROM t_reservation WHERE id = ?1", nativeQuery = true)
 	 Long findIdTrajetByIdReservation(long idReservation);
+	 
+	 
 }
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.mail.internet.AddressException;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import com.proxair.dto.DtoTarifAttributs;
 
 import com.proxair.dto.DtoTrajet;
 import com.proxair.exception.NotFoundException;
+import com.proxair.persistence.entity.Reservation;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.persistence.repository.ReservationRepository;
 import com.proxair.persistence.repository.TrajetRepository;
@@ -25,9 +27,11 @@ import com.proxair.service.IUserService;
 @Transactional
 public class UserService implements IUserService {
 	
+	@Autowired TrajetService trajetService;
 	@Autowired TrajetRepository trajetRepository;
 	@Autowired ReservationRepository reservationRepository;
-	@Autowired TrajetService trajetService;
+	@Autowired EmailService emailService;
+
 
 	public List<DtoTrajet> findRides(Date date) {
 		List<Trajet> trajets = trajetRepository.findRidesByDate(date);
@@ -56,20 +60,34 @@ public class UserService implements IUserService {
 			DtoReservationPlaces drp = new DtoReservationPlaces();
 			drp.setEtatPaiement(false);
 			drp.setNbPlacesReservees(nbrePlaces);
-			drp.setMontantTotalTTC(nbrePlaces*DtoTarifAttributs.TARIFTTC); 	
+			drp.setMontantTotalTTC(nbrePlaces*DtoTarifAttributs.TARIFTTC); 
+			drp.setIdTrajet(idTrajet);
 			
 			return drp;
 		}
 		else {
 			throw new NotFoundException ("Trajet indisponible à la réservation ou inexistant !");
 		}
-	}
+	}	
 	
+	@Override
+	public void saveReservation(String mail, DtoReservationPlaces drp) throws AddressException {
+		//si j'ai un mail valide et un trajet valable à été selectionné avec bon nombres de places
+		if (EmailService.isValidEmailAddress(mail) && CheckifReservationIsPossible(drp.getIdTrajet(), drp.getNbPlacesReservees())) {
 	
-	public void Registerreservation() {}
-	
-	
-	
+				Reservation reservation = new Reservation();
+				reservation.setMail(mail);
+				reservation.setEtatPaiement(true);
+				reservation.setEtatReservationClient("Valide");
+				reservation.setMontantTotalTTC(drp.getMontantTotalTTC());
+				reservation.setNbPlacesReservees(drp.getNbPlacesReservees());
+				
+				reservationRepository.save(reservation);
+				//emailService.sendMail(mail);
+		}	
+			trajetService.updateNbPlacesTrajet(drp.getIdTrajet());
+			trajetService.updateEtatReservation(drp.getIdTrajet());
+		}
 	
 	public boolean CheckifReservationIsPossible(Date date, Time time, int nbPlaceAReserver) {
 		
@@ -84,7 +102,7 @@ public class UserService implements IUserService {
 		}
 	}
 	
-	public boolean CheckifReservationIsPossible(int idTrajet, int nbPlaceAReserver) {
+	public boolean CheckifReservationIsPossible(long idTrajet, int nbPlaceAReserver) {
 		
 		Optional<Trajet> opt = trajetRepository.findRide(idTrajet);
 		if (opt.isPresent()) {

@@ -1,16 +1,17 @@
 package com.proxair.controller;
 
-
-
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+
+import javax.mail.internet.AddressException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,6 @@ import com.proxair.service.IUserService;
 public class UserController {
 
 @Autowired IUserService userService;
-
 
 @RequestMapping(value="/trajets" , method=RequestMethod.GET)
 @ResponseBody 
@@ -46,5 +46,11 @@ public DtoReservationPlaces chooseSeats(@RequestParam("idTrajet") long idTrajet,
 @ResponseBody
 public void cancelReservation (@PathVariable long id) {
     userService.cancelResa(id);
+}
+
+@PostMapping (value = "/reservation/paiement")
+@ResponseBody
+public void saveReservation(@RequestParam("mail") String mail, @RequestBody DtoReservationPlaces drp) throws AddressException {
+	userService.saveReservation(mail, drp);
 }
 }

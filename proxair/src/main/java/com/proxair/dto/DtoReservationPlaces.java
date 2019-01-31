@@ -6,6 +6,7 @@ public class DtoReservationPlaces {
 	private double montantTotalTTC;
 	private String etatReservationClient;
 	private boolean etatPaiement;
+	private long idTrajet;
 	
 	public DtoReservationPlaces() {
 	}
@@ -42,5 +43,13 @@ public class DtoReservationPlaces {
 		this.etatPaiement = etatPaiement;
 	}
 
-	
+	public long getIdTrajet() {
+		return idTrajet;
+	}
+
+	public void setIdTrajet(long idTrajet) {
+		this.idTrajet = idTrajet;
+	}
+
+
 }

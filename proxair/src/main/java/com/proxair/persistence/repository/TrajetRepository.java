@@ -28,7 +28,7 @@ public interface TrajetRepository extends JpaRepository <Trajet, Long>{
 	void updateEtatReservation(String etatReservation, long idTrajet);
 
 	@Query(value= "SELECT * FROM t_trajet WHERE id = ?1", nativeQuery = true)
-	Optional<Trajet> findRide(int id);
+	Optional<Trajet> findRide(long idTrajet);
 	
 	@Query(value= "SELECT * FROM t_trajet WHERE date = ?1 AND heureDepart=?2", nativeQuery = true)
 	Optional<Trajet> findRide(Date date, Time heureDepart);
