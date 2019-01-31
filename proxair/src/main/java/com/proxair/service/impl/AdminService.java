@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -12,10 +15,14 @@ import org.springframework.stereotype.Service;
 
 import com.proxair.dto.DtoCreationPrixRef;
 import com.proxair.dto.DtoCreationTrajet;
+import com.proxair.dto.DtoTournee;
+import com.proxair.dto.DtoTrajet;
 import com.proxair.exception.NotFoundException;
 import com.proxair.persistence.entity.PrixGeneration;
+import com.proxair.persistence.entity.Tournee;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.persistence.repository.PrixGenerationRepository;
+import com.proxair.persistence.repository.TourneeRepository;
 import com.proxair.persistence.repository.TrajetRepository;
 import com.proxair.service.IAdminService;
 
@@ -25,6 +32,7 @@ public class AdminService implements IAdminService {
 	
 	@Autowired TrajetRepository trajetRepository;
 	@Autowired PrixGenerationRepository prixGenerationRepository;
+	@Autowired TourneeRepository tourneeRepository;
 
 	
 	public Trajet addTrajet(Trajet trajet) {
@@ -100,6 +108,14 @@ public class AdminService implements IAdminService {
 	}
 	
 	
+	public void UpdateVisibility() {
+		List<Trajet> trajets = trajetRepository.findRidesByDate(getDate15());
+		trajets.forEach(a -> a.setEtatReservation("disponible"));
+		trajetRepository.saveAll(trajets);
+		}
+	
+	
+	
 	//Verifie si la date est dans les 15 prochains jours
 	@Override
 	public boolean checkDate15(Date date) {
@@ -119,6 +135,47 @@ public class AdminService implements IAdminService {
 	}
 	
 	
+	//donne la date dans 15 jours
+	public Date getDate15() {
+		Calendar cal15 = Calendar.getInstance();
+	       Long millis = System.currentTimeMillis();
+	       Date date15 = new Date(millis);
+	       	cal15.setTime(date15);
+		    cal15.add(Calendar.DATE, 15);
+		    
+		    Date date = new Date(cal15.getTimeInMillis());
+		    
+		return date;
+	}
+
+
+
+
+	@Override
+	public String addTrip(DtoTournee dtoTournee) {
+		
+		if (checkTripBetween3(dtoTournee.getHeureTournee()))
+		{ 
+			Tournee tournee = new Tournee();
+			tournee.setHeureTournee(dtoTournee.getHeureTournee());
+			tourneeRepository.save(tournee);
+		}
+		else throw new NotFoundException(" Vous ne pouvez pas creer une tournee qui a un depart 3h avant ou apres");
+		
+		
+		// TODO Auto-generated method stub
+		return " La tournee a ete enregistree";
+	}
+	
+	
+	public boolean checkTripBetween3(Time time) {
+		
+		LocalTime time0 = time.toLocalTime();
+		Time time1 = Time.valueOf(time0.minusHours(3));
+		Time time2 = Time.valueOf(time0.plusHours(3));
+		if (tourneeRepository.findTripBetween(time1, time2).isEmpty()) return true;
+		else return false;
+	}
 	
 	
 }

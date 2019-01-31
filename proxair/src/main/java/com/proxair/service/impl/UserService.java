@@ -1,7 +1,6 @@
 package com.proxair.service.impl;
 
-import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,8 +10,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.proxair.dto.DtoDemandedePaiement;
 import com.proxair.dto.DtoTrajet;
+import com.proxair.dto.DtodemandeAchat;
 import com.proxair.exception.NotFoundException;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.persistence.repository.TrajetRepository;
@@ -34,25 +34,46 @@ public class UserService implements IUserService {
 	
 	
 	
-	public void Registerreservation() {}
+	public void registerreservation() {}
 	
-	
-	
-	
-	public boolean CheckifReservationIsPossible(Date date, Time time, int nbPlaceAReserver) {
+	public DtoDemandedePaiement askReservationFromUser(DtodemandeAchat dtodemandeAchat) {
 		
-		Optional<Trajet> opt = trajetRepository.findRide(date,time);
+		if(checkifReservationIsPossible(dtodemandeAchat)
+				&& trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart()).get().getEtatReservation().equals("disponible")
+				&& !trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart()).get().getEtatTrajet().equals("annulé")
+				&& !trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart()).get().getEtatTrajet().equals("terminé")) {
+			DtoDemandedePaiement dtoDemandedePaiement = new DtoDemandedePaiement();
+			Optional<Trajet> trajet = trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart());
+			dtoDemandedePaiement.setDate(dtodemandeAchat.getDate());
+			dtoDemandedePaiement.setIdTrajet(trajet.get().getId());
+			dtoDemandedePaiement.setNbPlacesReservees(dtodemandeAchat.getNbPlacesDemandees());
+			dtoDemandedePaiement.setPrixPlace(trajet.get().getPrix_place());
+			dtoDemandedePaiement.setPrixTTC((double)(trajet.get().getPrix_place()* dtodemandeAchat.getNbPlacesDemandees()));
+			dtoDemandedePaiement.setTime(dtodemandeAchat.getHeureDepart());
+			return dtoDemandedePaiement;
+		}else {
+			throw new NotFoundException(" Le trajet qui part le" + dtodemandeAchat.getDate().toString() + " à " + dtodemandeAchat.getHeureDepart().toString() +" n'est plus disponible !");
+		}
+			
+		
+		
+	}
+
+	
+	public boolean checkifReservationIsPossible(DtodemandeAchat dtodemandeAchat) {
+		
+		Optional<Trajet> opt = trajetRepository.findRide(dtodemandeAchat.getDate(),dtodemandeAchat.getHeureDepart());
 		if (opt.isPresent()) {
-			if(opt.get().getNbPlacesDispo() >= nbPlaceAReserver) {
+			if(opt.get().getNbPlacesDispo() >= dtodemandeAchat.getNbPlacesDemandees()) {
 				return true;
 			} else return false;
 		
 		} else {
-			throw new NotFoundException(" Le trajet qui part le" + date.toString() + " à " + time.toString() +" n'a pas été trouvé !");
+			throw new NotFoundException(" Le trajet qui part le" + dtodemandeAchat.getDate().toString() + " à " + dtodemandeAchat.getHeureDepart() +" n'a pas été trouvé !");
 		}
 	}
 	
-	public boolean CheckifReservationIsPossible(int idTrajet, int nbPlaceAReserver) {
+	public boolean checkifReservationIsPossible(int idTrajet, int nbPlaceAReserver) {
 		
 		Optional<Trajet> opt = trajetRepository.findRide(idTrajet);
 		if (opt.isPresent()) {
