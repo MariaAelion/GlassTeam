@@ -22,16 +22,18 @@ public class TrajetService implements ITrajetService {
 	
 	public void updateNbPlacesTrajet(long idTrajet) {
 		Optional<Trajet> trajet = trajetRepository.findById(idTrajet);
+		
+		if (trajet.isPresent()) {
 		List<Reservation> listReservations = trajet.get().getReservations();
 		int nbTotalPlacesReservees = 0;
 		
-		if (trajet.isPresent()) {
 			for (Reservation r : listReservations) {
 				if (r.isEtatPaiement() == true && r.getEtatReservationClient() != "Annulé") {
 					nbTotalPlacesReservees += r.getNbPlacesReservees();
 				}
 		}
 		trajet.get().setNbPlacesDispo(trajet.get().getNbPlacesTotal()-nbTotalPlacesReservees);
+		trajetRepository.updatePlacesDispos(trajet.get().getNbPlacesDispo(), idTrajet);
 	}
 		else {
 			throw new NotFoundException ("Mise à jour des places disponibles sur trajet inexistant !");
@@ -40,8 +42,12 @@ public class TrajetService implements ITrajetService {
 	
 	public void updateEtatReservation(long idTrajet) {
 		Optional<Trajet> trajet = trajetRepository.findById(idTrajet);
-		if (trajet.isPresent() && trajet.get().getNbPlacesDispo() == 0) {
+		if (trajet.isPresent()) {
+			trajet.get().setEtatReservation("Disponible");
+			if (trajet.get().getNbPlacesDispo() == 0) {
 				trajet.get().setEtatReservation("Complet");
+			}
+			trajetRepository.updateEtatReservation(trajet.get().getEtatReservation(), idTrajet);
 			}
 		else {
 			throw new NotFoundException ("Mise à jour de l'état de réservation sur trajet inexistant !");

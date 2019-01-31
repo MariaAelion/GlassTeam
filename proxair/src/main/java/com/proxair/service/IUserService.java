@@ -10,4 +10,6 @@ public interface IUserService {
 	List<DtoTrajet> findRides(Date date);
 
 	DtoReservationPlaces chooseSeats(long idTrajet, int nbrePlaces);
+
+	void cancelResa(long id);
 }
