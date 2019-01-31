@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import com.proxair.dto.DtoCreationPrixRef;
 import com.proxair.dto.DtoCreationTrajet;
+import com.proxair.dto.DtoTournee;
 import com.proxair.persistence.entity.Trajet;
 
 public interface IAdminService {
@@ -15,4 +16,8 @@ public interface IAdminService {
 	public boolean checkDate15(Date date);
 
 	boolean createPriceRef(DtoCreationPrixRef dtoCreationPrixRef);
+	
+	public void UpdateVisibility();
+
+	String addTrip(DtoTournee dtoTournee);
 }

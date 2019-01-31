@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.proxair.dto.DtoCreationPrixRef;
 import com.proxair.dto.DtoCreationTrajet;
+import com.proxair.dto.DtoTournee;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.service.IAdminService;
 
@@ -35,6 +36,20 @@ public class AdminController {
 		
 		return  adminService.createtravel(dtotrajet);
 	}
+	
+	
+	@PostMapping(value="/addTrip")
+	@ResponseBody
+	@ResponseStatus(code=HttpStatus.CREATED)
+	public String  addTrip(@RequestBody DtoTournee  dtoTournee) {
+		
+		return  adminService.addTrip(dtoTournee);
+	}
+	
+	
+	
+	
+	
 
 	@PostMapping(value="/createPrixRef")
 	@ResponseBody
