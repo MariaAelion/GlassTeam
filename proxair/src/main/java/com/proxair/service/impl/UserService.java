@@ -1,7 +1,6 @@
 package com.proxair.service.impl;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +38,10 @@ public class UserService implements IUserService {
 	
 	public DtoDemandedePaiement askReservationFromUser(DtodemandeAchat dtodemandeAchat) {
 		
-		if(checkifReservationIsPossible(dtodemandeAchat)) {
+		if(checkifReservationIsPossible(dtodemandeAchat)
+				&& trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart()).get().getEtatReservation().equals("disponible")
+				&& !trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart()).get().getEtatTrajet().equals("annulé")
+				&& !trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart()).get().getEtatTrajet().equals("terminé")) {
 			DtoDemandedePaiement dtoDemandedePaiement = new DtoDemandedePaiement();
 			Optional<Trajet> trajet = trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart());
 			dtoDemandedePaiement.setDate(dtodemandeAchat.getDate());
@@ -56,7 +58,7 @@ public class UserService implements IUserService {
 		
 		
 	}
-	
+
 	
 	public boolean checkifReservationIsPossible(DtodemandeAchat dtodemandeAchat) {
 		
