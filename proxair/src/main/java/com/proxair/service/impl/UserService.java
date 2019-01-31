@@ -12,6 +12,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.proxair.dto.DtoMail;
+import com.proxair.dto.DtoMailAttributs;
 import com.proxair.dto.DtoReservationPlaces;
 import com.proxair.dto.DtoTarifAttributs;
 
@@ -43,9 +45,20 @@ public class UserService implements IUserService {
 	
 	@Override
     public void cancelResa(long idReservation) {
-        reservationRepository.cancelReservation(idReservation); 
-        trajetService.updateNbPlacesTrajet(reservationRepository.findIdTrajetByIdReservation(idReservation));
-        trajetService.updateEtatReservation(reservationRepository.findIdTrajetByIdReservation(idReservation));
+		Optional<Reservation> reservation = reservationRepository.findById(idReservation);
+		
+		if (reservation.isPresent()) {
+			 reservationRepository.cancelReservation(idReservation); 
+		     trajetService.updateNbPlacesTrajet(reservationRepository.findIdTrajetByIdReservation(idReservation));
+		     trajetService.updateEtatReservation(reservationRepository.findIdTrajetByIdReservation(idReservation));
+		     
+		     DtoMail email = new DtoMail();
+				email.setContent("Nous vous confirmons l'annulation de votre réservation ("+reservation.get().getNbPlacesReservees()+" place(s) réservées) pour le trajet Saint-Etienne/Lyon. Vous serez remboursés du montant de "+ reservation.get().getMontantTotalTTC() + " euros.");
+				email.setFrom(DtoMailAttributs.FROM);
+				email.setSubject(DtoMailAttributs.ANNULATIONSUBJECT);
+				email.setTo(reservation.get().getMail());
+				emailService.sendMail(email);
+		}  
     }
 	
 	public DtoReservationPlaces chooseSeats(long idTrajet, int nbrePlaces) {
@@ -83,11 +96,17 @@ public class UserService implements IUserService {
 				reservation.setNbPlacesReservees(drp.getNbPlacesReservees());
 				
 				reservationRepository.save(reservation);
-				//emailService.sendMail(mail);
+				DtoMail email = new DtoMail();
+				email.setContent("Nous vous confirmons la réservation de "+drp.getNbPlacesReservees()+" place(s) pour le trajet Saint-Etienne/Lyon pour un montant total de "+ drp.getMontantTotalTTC() + " euros TTC.");
+				email.setFrom(DtoMailAttributs.FROM);
+				email.setSubject(DtoMailAttributs.CONFIRMATIONSUBJECT);
+				email.setTo(mail);
+				emailService.sendMail(email);
 		}	
 			trajetService.updateNbPlacesTrajet(drp.getIdTrajet());
 			trajetService.updateEtatReservation(drp.getIdTrajet());
 		}
+
 	
 	public boolean CheckifReservationIsPossible(Date date, Time time, int nbPlaceAReserver) {
 		
