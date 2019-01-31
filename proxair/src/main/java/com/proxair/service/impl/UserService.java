@@ -23,13 +23,14 @@ import com.proxair.persistence.entity.Reservation;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.persistence.repository.ReservationRepository;
 import com.proxair.persistence.repository.TrajetRepository;
+import com.proxair.service.ITrajetService;
 import com.proxair.service.IUserService;
 
 @Service
 @Transactional
 public class UserService implements IUserService {
 	
-	@Autowired TrajetService trajetService;
+	@Autowired ITrajetService trajetService;
 	@Autowired TrajetRepository trajetRepository;
 	@Autowired ReservationRepository reservationRepository;
 	@Autowired EmailService emailService;
@@ -85,7 +86,6 @@ public class UserService implements IUserService {
 	
 	@Override
 	public void saveReservation(String mail, DtoReservationPlaces drp) throws AddressException {
-		//si j'ai un mail valide et un trajet valable à été selectionné avec bon nombres de places
 		if (EmailService.isValidEmailAddress(mail) && CheckifReservationIsPossible(drp.getIdTrajet(), drp.getNbPlacesReservees())) {
 	
 				Reservation reservation = new Reservation();
@@ -109,7 +109,6 @@ public class UserService implements IUserService {
 
 	
 	public boolean CheckifReservationIsPossible(Date date, Time time, int nbPlaceAReserver) {
-		
 		Optional<Trajet> opt = trajetRepository.findRide(date,time);
 		if (opt.isPresent()) {
 			if(opt.get().getNbPlacesDispo() >= nbPlaceAReserver) {
@@ -122,7 +121,6 @@ public class UserService implements IUserService {
 	}
 	
 	public boolean CheckifReservationIsPossible(long idTrajet, int nbPlaceAReserver) {
-		
 		Optional<Trajet> opt = trajetRepository.findRide(idTrajet);
 		if (opt.isPresent()) {
 			if(opt.get().getNbPlacesDispo() >= nbPlaceAReserver) {

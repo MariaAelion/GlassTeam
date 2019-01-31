@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.proxair.dto.DtoCreationPrixRef;
 import com.proxair.dto.DtoCreationTrajet;
+import com.proxair.dto.DtoTournee;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.service.IAdminService;
 
@@ -35,13 +35,14 @@ public class AdminController {
 		
 		return  adminService.createtravel(dtotrajet);
 	}
-
-	@PostMapping(value="/createPrixRef")
+	
+	
+	@PostMapping(value="/addTrip")
 	@ResponseBody
 	@ResponseStatus(code=HttpStatus.CREATED)
-	public boolean  addPrixRef(@RequestBody DtoCreationPrixRef  dtoCreationPrixRef) {
+	public String  addTrip(@RequestBody DtoTournee dtoTournee) {
 		
-		return  adminService.createPriceRef(dtoCreationPrixRef);
+		return  adminService.addTrip(dtoTournee);
 	}
 	
 }

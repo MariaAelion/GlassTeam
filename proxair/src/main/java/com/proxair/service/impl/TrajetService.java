@@ -1,5 +1,7 @@
 package com.proxair.service.impl;
 
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +22,7 @@ public class TrajetService implements ITrajetService {
 	
 	@Autowired TrajetRepository trajetRepository;
 	
+	@Override
 	public void updateNbPlacesTrajet(long idTrajet) {
 		Optional<Trajet> trajet = trajetRepository.findById(idTrajet);
 		
@@ -40,6 +43,7 @@ public class TrajetService implements ITrajetService {
 		}
 	}
 	
+	@Override
 	public void updateEtatReservation(long idTrajet) {
 		Optional<Trajet> trajet = trajetRepository.findById(idTrajet);
 		if (trajet.isPresent()) {
@@ -52,5 +56,37 @@ public class TrajetService implements ITrajetService {
 		else {
 			throw new NotFoundException ("Mise à jour de l'état de réservation sur trajet inexistant !");
 		}
+	}
+
+	@Override
+	public void UpdateVisibility() {
+		List<Trajet> trajets = trajetRepository.findRidesByDate(getDate15());
+		trajets.forEach(a -> a.setEtatReservation("Disponible"));
+		trajetRepository.saveAll(trajets);
+		}
+	
+	//Verifie si la date est dans les 15 prochains jours
+	@Override
+	public boolean checkDate15(Date date) {
+		 Calendar cal15 = Calendar.getInstance();
+	     cal15.setTime(new Date(System.currentTimeMillis()));
+		 cal15.add(Calendar.DATE, 15);
+		 
+		 Calendar cal = Calendar.getInstance();
+		 cal.setTime(date);
+		    
+		 if (cal.getTime().before(cal15.getTime())) {
+			 return true;
+		    }
+		    else return false;
+	}
+	
+	//donne la date dans 15 jours
+	@Override
+	public Date getDate15() {
+		Calendar cal15 = Calendar.getInstance();
+	    cal15.setTime(new Date(System.currentTimeMillis()));
+		cal15.add(Calendar.DATE, 15);
+		return new Date(cal15.getTimeInMillis());
 	}
 }

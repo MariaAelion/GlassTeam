@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,10 +32,9 @@ public class UserController {
 @Autowired EmailService mailService;
 
 
-@RequestMapping(value="/trajets" , method=RequestMethod.GET)
+@GetMapping(value="/trajets")
 @ResponseBody 
 public List<DtoTrajet> findRides(@RequestParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate fromDate) {
-	
 	Date date = Date.valueOf(fromDate);
 	return userService.findRides(date);
 }
