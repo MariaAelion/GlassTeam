@@ -40,9 +40,9 @@ public class UserController {
 		userService.cancelResa(id);
 	}
 
-@RequestMapping(value="/trajets" , method=RequestMethod.GET)
-@ResponseBody 
-public List<DtoTrajet> findRides(@RequestParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate fromDate) {
+	@RequestMapping(value="/trajets" , method=RequestMethod.GET)
+	@ResponseBody 
+	public List<DtoTrajet> findRides(@RequestParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate fromDate) {
 	
 	Date date = Date.valueOf(fromDate);
 	return userService.findRides(date);
