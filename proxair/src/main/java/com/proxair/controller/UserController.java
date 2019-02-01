@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.proxair.dto.DtoMail;
 import com.proxair.dto.DtoReservationPlaces;
 import com.proxair.dto.DtoDemandedePaiement;
+import com.proxair.dto.DtoIdReservation;
 import com.proxair.dto.DtoTrajet;
 import com.proxair.dto.DtoTrajetsJour;
 import com.proxair.dto.DtodemandeAchat;
@@ -43,10 +44,10 @@ public DtoReservationPlaces chooseSeats(@RequestParam("idTrajet") long idTrajet,
 	return userService.chooseSeats(idTrajet, nbrePlaces);
 }
 
-@DeleteMapping(value ="/trajets/reservation/")
+@PostMapping(value ="/trajets/reservation/annulation")
 @ResponseBody
-public void cancelReservation (@RequestBody long idReservation) {
-    userService.cancelResa(idReservation);
+public void cancelReservation (@RequestBody DtoIdReservation dtoIdReservation) {
+    userService.cancelResa(dtoIdReservation.getIdReservation());
 }
 
 @PostMapping (value = "/trajets/reservation/paiement")
