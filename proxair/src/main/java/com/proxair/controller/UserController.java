@@ -41,6 +41,4 @@ public DtoDemandedePaiement  askReservationFromUser(@RequestBody DtodemandeAchat
 	
 	return  userService.askReservationFromUser(dtodemandeAchat);
 }
-
-
 }
