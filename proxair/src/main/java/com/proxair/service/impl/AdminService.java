@@ -201,8 +201,8 @@ public class AdminService implements IAdminService {
 	
 	public boolean checkTripBetween3(Time time) {
 		LocalTime time0 = time.toLocalTime();
-		Time time1 = Time.valueOf(time0.minusHours(3));
-		Time time2 = Time.valueOf(time0.plusHours(3));
+		Time time1 = Time.valueOf(time0.minusHours(3).plusMinutes(1));
+		Time time2 = Time.valueOf(time0.plusHours(3).minusMinutes(1));
 		if (tourneeRepository.findTripBetween(time1, time2).isEmpty()) return true;
 		else return false;
 	}
