@@ -88,13 +88,19 @@ public class UserService implements IUserService {
 	
 	@Override
 	public void saveReservation(String mail, DtoReservationPlaces drp) throws AddressException {
-		if (EmailService.isValidEmailAddress(mail) && checkifReservationIsPossible(drp.getIdTrajet(), drp.getNbPlacesReservees())) {
+		if (EmailService.isValidEmailAddress(mail)) {
+			
+			if (checkifReservationIsPossible(drp.getIdTrajet(), drp.getNbPlacesReservees())) {
 				Reservation reservation = new Reservation();
 				reservation.setMail(mail);
 				reservation.setEtatPaiement(true);
 				reservation.setEtatReservationClient("Valide");
 				reservation.setMontantTotalTTC(drp.getMontantTotalTTC());
 				reservation.setNbPlacesReservees(drp.getNbPlacesReservees());
+				
+				List<Reservation> reservations = trajetRepository.findById(drp.getIdTrajet()).get().getReservations();
+	            reservations.add(reservation);
+	            trajetRepository.findById(drp.getIdTrajet()).get().setReservations(reservations);
 				
 				reservationRepository.save(reservation);
 				DtoMail email = new DtoMail();
@@ -103,9 +109,17 @@ public class UserService implements IUserService {
 				email.setSubject(DtoMailAttributs.CONFIRMATIONSUBJECT);
 				email.setTo(mail);
 				emailService.sendMail(email);
-		}	
-			trajetService.updateNbPlacesTrajet(drp.getIdTrajet());
-			trajetService.updateEtatReservation(drp.getIdTrajet());
+				
+				trajetService.updateNbPlacesTrajet(drp.getIdTrajet());
+				trajetService.updateEtatReservation(drp.getIdTrajet());
+		}
+		else {
+			throw new NotFoundException ("Trajet indisponible à la réservation ou inexistant !");
+		}
+		}
+		else {
+				throw new AddressException();
+			}
 		}
 
 	public DtoDemandedePaiement askReservationFromUser(DtodemandeAchat dtodemandeAchat) {
