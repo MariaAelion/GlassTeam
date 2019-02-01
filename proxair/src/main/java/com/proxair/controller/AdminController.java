@@ -60,7 +60,6 @@ public class AdminController {
 	@ResponseBody
 	@ResponseStatus(code=HttpStatus.CREATED)
 	public boolean  addPrixRef(@RequestBody DtoCreationPrixRef  dtoCreationPrixRef) {
-		
 		return  adminService.createPriceRef(dtoCreationPrixRef);
 	}
 	
