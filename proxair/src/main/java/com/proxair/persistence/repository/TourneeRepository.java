@@ -12,8 +12,10 @@ public interface TourneeRepository extends JpaRepository <Tournee, Long>{
 	
 	@Query(value= "SELECT * FROM t_tournee WHERE heureTournee BETWEEN ?1 AND ?2", nativeQuery = true)
 	List<Tournee> findTripBetween(Time time1, Time time2);
+
 	
 	@Query(value= "SELECT * FROM t_tournee ORDER BY heureTournee", nativeQuery = true)
 	List<Tournee> findAllOrdered();
 
+	
 }

@@ -20,5 +20,4 @@ public class DtoTournee {
 	public void setHeureTournee(Time heureTournee) {
 		this.heureTournee = heureTournee;
 	}
-
 }

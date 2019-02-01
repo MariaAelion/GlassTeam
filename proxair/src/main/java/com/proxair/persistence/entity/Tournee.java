@@ -35,5 +35,6 @@ public class Tournee {
 	public void setHeureTournee(Time heureTournee) {
 		this.heureTournee = heureTournee;
 	}
-
+	
 }
+

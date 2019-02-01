@@ -32,5 +32,4 @@ public class ScheduledTasks {
         log.info("The time is now {}", dateFormat.format(new Date()));
         adminService.UpdateVisibility();
     }
-    
-}
+  }
