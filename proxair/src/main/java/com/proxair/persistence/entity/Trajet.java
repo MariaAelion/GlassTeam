@@ -41,10 +41,10 @@ import javax.persistence.Table;
 		private String etatReservation;
 		
 		@Column(name = "prix_place", nullable = false)
-		private double prix_place;
-		
-		@Column(name = "tva", nullable = false)
-		private double tva;
+        private double prix_place;
+
+        @Column(name = "tva", nullable = false)
+        private double tva;
 		
 		@OneToMany
 		@JoinColumn(name="id_trajets", referencedColumnName ="id")
@@ -110,8 +110,8 @@ import javax.persistence.Table;
 			return prix_place;
 		}
 
-		public void setPrix_place(double i) {
-			this.prix_place = i;
+		public void setPrix_place(double prix_place) {
+			this.prix_place = prix_place;
 		}
 
 		public double getTva() {
@@ -129,6 +129,5 @@ import javax.persistence.Table;
 		public void setReservations(List<Reservation> reservations) {
 			this.reservations = reservations;
 		}
-
 
 }

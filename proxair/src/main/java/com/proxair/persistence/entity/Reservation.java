@@ -5,8 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,7 +20,7 @@ public class Reservation {
 	private int nbPlacesReservees;
 	
 	@Column (name="montantTotalTTC", nullable=false)
-	private float montantTotalTTC;
+	private double montantTotalTTC;
 	
 	@Column (name="etatReservationClient", length = 20, nullable=false)
 	private String etatReservationClient;
@@ -30,9 +28,17 @@ public class Reservation {
 	@Column (name="etatPaiement", nullable=false)
 	private boolean etatPaiement;
 	
-	@ManyToOne
-	@JoinColumn(name="id_client", referencedColumnName="id")
-	private Client client;
+	@Column (name="mail", nullable=false)
+	private String mail;
+	
+
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
 
 
 
@@ -60,14 +66,14 @@ public class Reservation {
 
 
 
-	public float getMontantTotalTTC() {
+	public double getMontantTotalTTC() {
 		return montantTotalTTC;
 	}
 
 
 
-	public void setMontantTotalTTC(float montantTotalTTC) {
-		this.montantTotalTTC = montantTotalTTC;
+	public void setMontantTotalTTC(double d) {
+		this.montantTotalTTC = d;
 	}
 
 
@@ -83,28 +89,12 @@ public class Reservation {
 	}
 
 
-
-	public boolean isEtatPaiement() {
-		return etatPaiement;
-	}
-
-
-
 	public void setEtatPaiement(boolean etatPaiement) {
 		this.etatPaiement = etatPaiement;
 	}
 
-
-
-	public Client getClient() {
-		return client;
+	public boolean isEtatPaiement() {
+		return etatPaiement;
 	}
-
-
-
-	public void setClient(Client client) {
-		this.client = client;
-	}
-
 
 }

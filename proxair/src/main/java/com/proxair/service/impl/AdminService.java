@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -17,33 +16,30 @@ import org.springframework.stereotype.Service;
 import com.proxair.calculs.CalculsDates;
 import com.proxair.dto.DtoCreationPrixRef;
 import com.proxair.dto.DtoCreationTrajet;
-import com.proxair.dto.DtoGenerate;
 import com.proxair.dto.DtoTournee;
-import com.proxair.dto.DtoTrajet;
+import com.proxair.dto.DtoGenerate;
 import com.proxair.exception.NotFoundException;
-import com.proxair.persistence.entity.PrixGeneration;
+
 import com.proxair.persistence.entity.Tournee;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.persistence.repository.PrixGenerationRepository;
 import com.proxair.persistence.repository.TourneeRepository;
 import com.proxair.persistence.repository.TrajetRepository;
 import com.proxair.service.IAdminService;
+import com.proxair.service.ITrajetService;
 
 @Service
 @Transactional
 public class AdminService implements IAdminService {
 	
 	@Autowired TrajetRepository trajetRepository;
+	@Autowired ITrajetService trajetService;
 	@Autowired PrixGenerationRepository prixGenerationRepository;
 	@Autowired TourneeRepository tourneeRepository;
 
-	
 	public Trajet addTrajet(Trajet trajet) {
 		return trajetRepository.save(trajet);
 	}
-
-	
-
 
 	@Override
 	public DtoCreationTrajet createtravel(DtoCreationTrajet dtotrajet) {
@@ -53,7 +49,7 @@ public class AdminService implements IAdminService {
 			// Cree le trajet dans la base de donnée
 			Trajet trajet = new Trajet();
 			trajet.setDate(dtotrajet.getDate());
-			if (checkDate15(dtotrajet.getDate())) {
+			if (trajetService.checkDate15(dtotrajet.getDate())) {
 				trajet.setEtatReservation("disponible");	
 			}
 			else trajet.setEtatReservation("indisponible");
@@ -61,54 +57,28 @@ public class AdminService implements IAdminService {
 			trajet.setHeureDepart(dtotrajet.getHeureDepart());
 			trajet.setNbPlacesDispo(dtotrajet.getNbPlacesTotal());
 			trajet.setNbPlacesTotal(dtotrajet.getNbPlacesTotal());
-			
-			if (prixGenerationRepository.getPrixGeneration().isPresent()) {
-				trajet.setPrix_place(prixGenerationRepository.getPrixGeneration().get().getPrixDeReference());
-				trajet.setTva(prixGenerationRepository.getPrixGeneration().get().getTvaDeReference());		
-			}else {
-				throw new NotFoundException(" Vous devez d'abord entrer un prix de reference !!!!!");
-			}
-			
 
 			// Recupere le trajet dans la base de donnée
 			DtoCreationTrajet dtoCreationTrajet = new DtoCreationTrajet();
-			Trajet trajet2 = new Trajet();
-			trajet2 = trajetRepository.save(trajet);
+			Trajet trajet2 = trajetRepository.save(trajet);
 			dtoCreationTrajet.setDate(trajet2.getDate());
 			dtoCreationTrajet.setHeureDepart(trajet2.getHeureDepart());
 			dtoCreationTrajet.setNbPlacesTotal(trajet2.getNbPlacesTotal());
 			
-
-
 			return dtoCreationTrajet;
 
-		}else throw new NotFoundException(" Vous ne pouvez pas creer un trajet qui a un depart 3h avant ou apres");
-		
-
-
+		} else throw new NotFoundException(" Vous ne pouvez pas creer un trajet qui a un depart 3h avant ou apres");
 	}
 	
-	@Override
-	public boolean createPriceRef(DtoCreationPrixRef dtoCreationPrixRef) {
-		
-		PrixGeneration prixgeneration = new PrixGeneration();
-		prixgeneration.setId(1);
-		prixgeneration.setPrixDeReference(dtoCreationPrixRef.getPrixRef());
-		prixgeneration.setTvaDeReference(dtoCreationPrixRef.getTvaRef());
-		prixGenerationRepository.save(prixgeneration);
-		return prixGenerationRepository.getPrixGeneration().isPresent();
-		
-	}
-	
-
 	public boolean checkRideBetween3(Date date, Time time) {
-		
 		LocalTime time0 = time.toLocalTime();
 		Time time1 = Time.valueOf(time0.minusHours(3));
 		Time time2 = Time.valueOf(time0.plusHours(3));
 		if (trajetRepository.findRidesBetween(date, time1, time2).isEmpty()) return true;
 		else return false;
 	}
+
+	
 	
 	
 	public void UpdateVisibility() {
@@ -187,7 +157,6 @@ public class AdminService implements IAdminService {
 		else throw new NotFoundException(" Vous ne pouvez pas generer de trajets avec un emploi du temps vide");
 
 		return "Tournee generee ";
-		
 	}
 	
 	/////////////// Tournees //////////////
@@ -198,7 +167,6 @@ public class AdminService implements IAdminService {
 		return tournees.stream()
 				.map(t -> new DtoTournee(t))
 				.collect(Collectors.toList());
-		
 	}
 
 	@Override
@@ -217,15 +185,17 @@ public class AdminService implements IAdminService {
 		return " La tournee a ete enregistree";
 	}
 	
-	
 	public boolean checkTripBetween3(Time time) {
-		
 		LocalTime time0 = time.toLocalTime();
 		Time time1 = Time.valueOf(time0.minusHours(3));
 		Time time2 = Time.valueOf(time0.plusHours(3));
 		if (tourneeRepository.findTripBetween(time1, time2).isEmpty()) return true;
 		else return false;
 	}
-	
-	
+
+	@Override
+	public boolean createPriceRef(DtoCreationPrixRef dtoCreationPrixRef) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
