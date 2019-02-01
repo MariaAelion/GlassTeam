@@ -21,6 +21,7 @@ import com.proxair.dto.DtoMail;
 import com.proxair.dto.DtoReservationPlaces;
 import com.proxair.dto.DtoDemandedePaiement;
 import com.proxair.dto.DtoTrajet;
+import com.proxair.dto.DtoTrajetsJour;
 import com.proxair.dto.DtodemandeAchat;
 import com.proxair.service.IUserService;
 import com.proxair.service.impl.EmailService;
@@ -35,9 +36,8 @@ public class UserController {
 
 @GetMapping(value="/trajets")
 @ResponseBody 
-public List<DtoTrajet> findRides(@RequestParam("date") @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate fromDate) {
-	Date date = Date.valueOf(fromDate);
-	return userService.findRides(date);
+public List<DtoTrajet> findRides(@RequestBody DtoTrajetsJour dtoTrajetsJour) {
+	return userService.findRides(dtoTrajetsJour.getDate());
 }
 
 @PostMapping(value="/trajets")
