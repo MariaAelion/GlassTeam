@@ -19,7 +19,7 @@ import com.proxair.dto.DtoCreationTrajet;
 import com.proxair.dto.DtoTournee;
 import com.proxair.dto.DtoGenerate;
 import com.proxair.exception.NotFoundException;
-
+import com.proxair.persistence.entity.PrixGeneration;
 import com.proxair.persistence.entity.Tournee;
 import com.proxair.persistence.entity.Trajet;
 import com.proxair.persistence.repository.PrixGenerationRepository;
@@ -195,7 +195,13 @@ public class AdminService implements IAdminService {
 
 	@Override
 	public boolean createPriceRef(DtoCreationPrixRef dtoCreationPrixRef) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		PrixGeneration prixgeneration = new PrixGeneration();
+		prixgeneration.setId(1);
+		prixgeneration.setPrixDeReference(dtoCreationPrixRef.getPrixRef());
+		prixgeneration.setTvaDeReference(dtoCreationPrixRef.getTvaRef());
+		prixGenerationRepository.save(prixgeneration);
+		return prixGenerationRepository.getPrixGeneration().isPresent();
+		
 	}
 }
