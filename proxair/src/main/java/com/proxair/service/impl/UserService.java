@@ -1,7 +1,6 @@
 package com.proxair.service.impl;
 
-import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,7 +16,10 @@ import com.proxair.dto.DtoMailAttributs;
 import com.proxair.dto.DtoReservationPlaces;
 import com.proxair.dto.DtoTarifAttributs;
 
+import com.proxair.dto.DtoDemandedePaiement;
+
 import com.proxair.dto.DtoTrajet;
+import com.proxair.dto.DtodemandeAchat;
 import com.proxair.exception.NotFoundException;
 import com.proxair.persistence.entity.Reservation;
 import com.proxair.persistence.entity.Trajet;
@@ -86,8 +88,7 @@ public class UserService implements IUserService {
 	
 	@Override
 	public void saveReservation(String mail, DtoReservationPlaces drp) throws AddressException {
-		if (EmailService.isValidEmailAddress(mail) && CheckifReservationIsPossible(drp.getIdTrajet(), drp.getNbPlacesReservees())) {
-	
+		if (EmailService.isValidEmailAddress(mail) && checkifReservationIsPossible(drp.getIdTrajet(), drp.getNbPlacesReservees())) {
 				Reservation reservation = new Reservation();
 				reservation.setMail(mail);
 				reservation.setEtatPaiement(true);
@@ -107,21 +108,41 @@ public class UserService implements IUserService {
 			trajetService.updateEtatReservation(drp.getIdTrajet());
 		}
 
+	public DtoDemandedePaiement askReservationFromUser(DtodemandeAchat dtodemandeAchat) {
+		
+		if(checkifReservationIsPossible(dtodemandeAchat)
+				&& trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart()).get().getEtatReservation().equals("disponible")
+				&& !trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart()).get().getEtatTrajet().equals("annulé")
+				&& !trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart()).get().getEtatTrajet().equals("terminé")) {
+			DtoDemandedePaiement dtoDemandedePaiement = new DtoDemandedePaiement();
+			Optional<Trajet> trajet = trajetRepository.findRide(dtodemandeAchat.getDate(), dtodemandeAchat.getHeureDepart());
+			dtoDemandedePaiement.setDate(dtodemandeAchat.getDate());
+			dtoDemandedePaiement.setIdTrajet(trajet.get().getId());
+			dtoDemandedePaiement.setNbPlacesReservees(dtodemandeAchat.getNbPlacesDemandees());
+			dtoDemandedePaiement.setPrixPlace(trajet.get().getPrix_place());
+			dtoDemandedePaiement.setPrixTTC((double)(trajet.get().getPrix_place()* dtodemandeAchat.getNbPlacesDemandees()));
+			dtoDemandedePaiement.setTime(dtodemandeAchat.getHeureDepart());
+			return dtoDemandedePaiement;
+		}else {
+			throw new NotFoundException(" Le trajet qui part le" + dtodemandeAchat.getDate().toString() + " à " + dtodemandeAchat.getHeureDepart().toString() +" n'est plus disponible !");
+		}
+	}
+
 	
-	public boolean CheckifReservationIsPossible(Date date, Time time, int nbPlaceAReserver) {
-		Optional<Trajet> opt = trajetRepository.findRide(date,time);
+	public boolean checkifReservationIsPossible(DtodemandeAchat dtodemandeAchat) {
+		Optional<Trajet> opt = trajetRepository.findRide(dtodemandeAchat.getDate(),dtodemandeAchat.getHeureDepart());
 		if (opt.isPresent()) {
-			if(opt.get().getNbPlacesDispo() >= nbPlaceAReserver) {
+			if(opt.get().getNbPlacesDispo() >= dtodemandeAchat.getNbPlacesDemandees()) {
 				return true;
 			} else return false;
 		
 		} else {
-			throw new NotFoundException(" Le trajet qui part le" + date.toString() + " à " + time.toString() +" n'a pas été trouvé !");
+			throw new NotFoundException(" Le trajet qui part le" + dtodemandeAchat.getDate().toString() + " à " + dtodemandeAchat.getHeureDepart() +" n'a pas été trouvé !");
 		}
 	}
-	
-	public boolean CheckifReservationIsPossible(long idTrajet, int nbPlaceAReserver) {
-		Optional<Trajet> opt = trajetRepository.findRide(idTrajet);
+
+	public boolean checkifReservationIsPossible(long idTrajet, int nbPlaceAReserver) {
+				Optional<Trajet> opt = trajetRepository.findRide(idTrajet);
 		if (opt.isPresent()) {
 			if(opt.get().getNbPlacesDispo() >= nbPlaceAReserver) {
 				return true;

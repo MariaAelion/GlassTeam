@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.proxair.service.ITrajetService;
+import com.proxair.service.IAdminService;
 
 @Component
 public class ScheduledTasks {
@@ -18,16 +18,18 @@ public class ScheduledTasks {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-	@Autowired ITrajetService trajetService;
+	@Autowired IAdminService adminService;
     
     @Scheduled(fixedRate = 5000)
     public void reportCurrentTime() {
         log.info("The time is now {}", dateFormat.format(new Date()));
+        
     }
+    
     
     @Scheduled(cron = "0 0 4 * * *")
     public void doEveryday() {
         log.info("The time is now {}", dateFormat.format(new Date()));
-        trajetService.UpdateVisibility();
+        adminService.UpdateVisibility();
     }
-}
+  }

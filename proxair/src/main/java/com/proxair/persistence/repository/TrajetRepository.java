@@ -35,4 +35,5 @@ public interface TrajetRepository extends JpaRepository <Trajet, Long>{
 	
 	@Query(value= "SELECT * FROM t_trajet WHERE date = ?1 AND heureDepart BETWEEN ?2 AND ?3", nativeQuery = true)
 	List<Trajet> findRidesBetween(Date date, Time time1, Time time2);
+	
 }

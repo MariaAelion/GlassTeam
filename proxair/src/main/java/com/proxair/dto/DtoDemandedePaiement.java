@@ -4,16 +4,16 @@ import java.sql.Date;
 import java.sql.Time;
 
 public class DtoDemandedePaiement {
-	private int idTrajet;
+	private Long idTrajet;
 	private Date date;
 	private Time time;
 	private int nbPlacesReservees;
-	private double prixPlaceTTC;
+	private double prixPlace;
 	private double prixTTC;
-	public int getIdTrajet() {
+	public Long getIdTrajet() {
 		return idTrajet;
 	}
-	public void setIdTrajet(int idTrajet) {
+	public void setIdTrajet(Long idTrajet) {
 		this.idTrajet = idTrajet;
 	}
 	public Date getDate() {
@@ -34,11 +34,11 @@ public class DtoDemandedePaiement {
 	public void setNbPlacesReservees(int nbPlacesReservees) {
 		this.nbPlacesReservees = nbPlacesReservees;
 	}
-	public double getPrixPlaceTTC() {
-		return prixPlaceTTC;
+	public double getPrixPlace() {
+		return prixPlace;
 	}
-	public void setPrixPlaceTTC(double prixPlaceTTC) {
-		this.prixPlaceTTC = prixPlaceTTC;
+	public void setPrixPlace(double prixPlace) {
+		this.prixPlace = prixPlace;
 	}
 	public double getPrixTTC() {
 		return prixTTC;
@@ -47,6 +47,4 @@ public class DtoDemandedePaiement {
 		this.prixTTC = prixTTC;
 	}
 	
-	
-
 }
