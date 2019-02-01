@@ -49,7 +49,7 @@ public class AdminService implements IAdminService {
 			// Cree le trajet dans la base de donnée
 			Trajet trajet = new Trajet();
 			trajet.setDate(dtotrajet.getDate());
-			if (trajetService.checkDate15(dtotrajet.getDate())) {
+			if (checkDate15(dtotrajet.getDate())) {
 				trajet.setEtatReservation("disponible");	
 			}
 			else trajet.setEtatReservation("indisponible");
@@ -57,17 +57,31 @@ public class AdminService implements IAdminService {
 			trajet.setHeureDepart(dtotrajet.getHeureDepart());
 			trajet.setNbPlacesDispo(dtotrajet.getNbPlacesTotal());
 			trajet.setNbPlacesTotal(dtotrajet.getNbPlacesTotal());
+			
+			if (prixGenerationRepository.getPrixGeneration().isPresent()) {
+				trajet.setPrix_place(prixGenerationRepository.getPrixGeneration().get().getPrixDeReference());
+				trajet.setTva(prixGenerationRepository.getPrixGeneration().get().getTvaDeReference());		
+			}else {
+				throw new NotFoundException(" Vous devez d'abord entrer un prix de reference !!!!!");
+			}
+			
 
 			// Recupere le trajet dans la base de donnée
 			DtoCreationTrajet dtoCreationTrajet = new DtoCreationTrajet();
-			Trajet trajet2 = trajetRepository.save(trajet);
+			Trajet trajet2 = new Trajet();
+			trajet2 = trajetRepository.save(trajet);
 			dtoCreationTrajet.setDate(trajet2.getDate());
 			dtoCreationTrajet.setHeureDepart(trajet2.getHeureDepart());
 			dtoCreationTrajet.setNbPlacesTotal(trajet2.getNbPlacesTotal());
 			
+
+
 			return dtoCreationTrajet;
 
-		} else throw new NotFoundException(" Vous ne pouvez pas creer un trajet qui a un depart 3h avant ou apres");
+		}else throw new NotFoundException(" Vous ne pouvez pas creer un trajet qui a un depart 3h avant ou apres");
+		
+
+
 	}
 	
 	public boolean checkRideBetween3(Date date, Time time) {
